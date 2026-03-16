@@ -4,18 +4,11 @@
 
 Bài toán dự đoán khách hàng rời bỏ (Customer Churn Prediction).
 
-Thiết kế hiện tại đã được đơn giản hóa để dễ code, dễ demo, dễ viết báo cáo:
 - Dữ liệu đầu vào: file Excel local.
 - Orchestration: Airflow.
 - Experiment tracking + Model Registry: MLflow.
 - Serving: FastAPI.
 - Hạ tầng: Docker Compose.
-
-Không dùng:
-- Kubernetes
-- Kafka
-- Spark
-- MinIO
 
 ## 2. Data Source
 
@@ -142,9 +135,8 @@ Buộc API reload model production từ MLflow Registry.
 
 Mục tiêu: giảm nhiễu, chỉ giữ entrypoint cần cho demo.
 
-## 9. Workflow Trình Bày Bài Làm (Cho Báo Cáo/Slide)
+## 9. Workflow
 
-Bạn có thể trình bày theo 8 bước sau:
 1. Bài toán churn prediction và ý nghĩa nghiệp vụ.
 2. Ràng buộc đồ án: local deployment, không over-engineering.
 3. Kiến trúc hệ thống tối giản (Docker Compose + Airflow + MLflow + FastAPI).
@@ -153,8 +145,3 @@ Bạn có thể trình bày theo 8 bước sau:
 6. Theo dõi thực nghiệm và quản lý version bằng MLflow.
 7. Serving online bằng FastAPI, demo predict thực tế.
 8. Kết luận: loại bỏ Kafka/MinIO/Spark/K8s giúp hệ thống dễ triển khai, dễ bảo trì, vẫn đủ vòng đời MLOps.
-
-## 10. Notes
-
-- Đây là stack cho mục tiêu học tập và demo đồ án.
-- Nếu muốn production hóa sau này, có thể bổ sung auth, CI/CD, monitoring nâng cao và hạ tầng cloud.
