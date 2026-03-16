@@ -25,7 +25,7 @@ flowchart LR
     I -- No --> K[Keep current production]
     J --> L[FastAPI reload model]
     K --> L
-    L --> M[/predict]
+    L --> M["/predict"]
 ```
 
 ## 2) End-to-End Data Flow

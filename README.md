@@ -1,4 +1,4 @@
-﻿# Customer Churn Prediction - Simplified MLOps (Student Project)
+# Customer Churn Prediction - Simplified MLOps (Student Project)
 
 ## 1. Project Goal
 
@@ -40,7 +40,7 @@ flowchart LR
     I -- No --> K[Keep current model]
     J --> L[FastAPI reload model]
     K --> L
-    L --> M[/predict]
+    L --> M["/predict"]
 ```
 
 ## 4. UI Endpoints and Accounts
