@@ -1,4 +1,4 @@
-# Customer Churn Prediction - Simplified MLOps (Student Project)
+# Customer Churn Prediction
 
 ## 1. Project Goal
 
