@@ -96,14 +96,24 @@ services:
       MODEL_NAME: churn_prediction_model
       MODEL_ALIAS: production
       INFERENCE_LOG_PATH: /app/logs/inference_log.jsonl
+      DRIFT_SUMMARY_PATH: /app/reports/drift_summary.json
     ports:
       - "8000:8000"
     volumes:
-      - fastapi_logs:/app/logs
+      - ../../../serving_pipeline/simple_api/logs:/app/logs
+      - ../../../serving_pipeline/simple_api/reports:/app/reports
     depends_on:
       - mlflow
+
+  evidently-ui:
+    build:
+      context: ./evidently
+    container_name: student_evidently_ui
+    ports:
+      - "8001:8001"
+    volumes:
+      - ../../../serving_pipeline/simple_api/evidently_workspace:/workspace
 
 volumes:
   postgres_data:
   mlflow_data:
-  fastapi_logs:

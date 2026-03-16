@@ -1,49 +1,99 @@
-# Student-Friendly MLOps Stack (Docker Compose Only)
+# Student-Friendly MLOps Stack (Docker Compose)
 
-This stack is a simplified architecture for Customer Churn Prediction.
+This is the active runtime stack for the cleaned project.
 
-## Services
+## Architecture
 
-- `postgres`: metadata database for Airflow and MLflow.
-- `mlflow`: experiment tracking and model registry.
-- `airflow-webserver`, `airflow-scheduler`: orchestration.
-- `fastapi`: online inference API.
+Services:
+- postgres
+- mlflow
+- airflow-webserver
+- airflow-scheduler
+- fastapi
+- evidently-ui
 
-No Kubernetes, no Kafka, no Spark, no MinIO.
+This architecture is intentionally simple:
+- No Kubernetes
+- No Kafka
+- No Spark
+- No MinIO
 
-## Start
+## Start the Stack
 
 ```bash
 cd infra/docker/student
 docker compose up --build -d
 ```
 
-## Access
+## Stop the Stack
 
-- Airflow: http://localhost:8080 (`airflow` / `airflow`)
+```bash
+cd infra/docker/student
+docker compose down
+```
+
+## Access URLs
+
+- Airflow: http://localhost:8080
+  - username: airflow
+  - password: airflow
 - MLflow: http://localhost:5000
-- FastAPI: http://localhost:8000/docs
+- FastAPI dashboard and API: http://localhost:8000
+- FastAPI docs: http://localhost:8000/docs
+- Evidently UI: http://localhost:8001
 
-## Trigger DAG
+## End-to-End Flow
 
-1. Open Airflow UI.
-2. Enable DAG `churn_batch_pipeline`.
-3. Trigger manually.
+1. Place source file at:
+   - data-pipeline/data/Newdata/Telco_customer_churn.xlsx
+2. Trigger DAG `churn_batch_pipeline` in Airflow.
+3. DAG runs ingest, validate, preprocess, feature build, train, evaluate, register, deploy, and monitor steps.
+4. FastAPI reloads the production model automatically in deploy step.
+5. Drift report is generated and published to Evidently UI.
 
-## Input Data Source
+## Key Outputs
 
-The DAG reads local file:
+- data-pipeline/data/raw/telco_customer_churn.xlsx
+- data-pipeline/data/processed/churn_processed.csv
+- data-pipeline/data/processed/churn_features.csv
+- model_pipeline/src/artifacts/latest_run.json
+- model_pipeline/src/artifacts/latest_metrics.json
+- model_pipeline/src/artifacts/deploy_status.json
+- serving_pipeline/simple_api/logs/inference_log.jsonl
+- serving_pipeline/simple_api/reports/drift_report.html
+- serving_pipeline/simple_api/reports/drift_summary.json
 
-`/opt/project/data-pipeline/data/Newdata/Telco_customer_churn.xlsx`
+## Monitoring Surfaces
 
-(mapped from workspace path via volume mount).
+- FastAPI monitoring endpoint:
+  - GET /monitoring
+- Evidently UI project dashboard:
+  - http://localhost:8001
 
-## Main Outputs
+## Common Commands
 
-- Raw ingest: `data-pipeline/data/raw/telco_customer_churn.xlsx`
-- Processed: `data-pipeline/data/processed/churn_processed.csv`
-- Features: `data-pipeline/data/processed/churn_features.csv`
-- Run metadata: `model_pipeline/src/artifacts/latest_run.json`
-- Metrics: `model_pipeline/src/artifacts/latest_metrics.json`
-- Rollout status: `model_pipeline/src/artifacts/deploy_status.json`
-- Inference log: FastAPI volume at `/app/logs/inference_log.jsonl`
+```bash
+# Check service status
+cd infra/docker/student
+docker compose ps
+
+# Tail Airflow scheduler logs
+cd infra/docker/student
+docker compose logs -f airflow-scheduler
+
+# Tail FastAPI logs
+cd infra/docker/student
+docker compose logs -f fastapi
+
+# Tail Evidently UI logs
+cd infra/docker/student
+docker compose logs -f evidently-ui
+```
+
+## Troubleshooting
+
+- If DAG is skipped due unchanged source, trigger with force run config in Airflow:
+  - {"force_run": true}
+- If model is not reloaded, call:
+  - POST http://localhost:8000/reload-model
+- If Evidently looks empty, rerun DAG to regenerate and republish reports.

@@ -1,107 +1,29 @@
-# Data Pipeline MLOps – Customer Churn Feature Store
+# Data Pipeline (Simplified)
 
-This repository demonstrates an **end-to-end data pipeline** for a customer churn use case, including:
+This folder contains the active file-based batch data pipeline.
 
-- Data versioning with **DVC**
-- Feature engineering & storage with **Feast**
-- Online feature serving with **Redis**
+## Active Input
 
----
+- data/Newdata/Telco_customer_churn.xlsx
 
-## 1. Repository Installation
+## Active Outputs
 
-Clone the repository:
+- data/raw/telco_customer_churn.xlsx
+- data/processed/churn_processed.csv
+- data/processed/churn_features.csv
 
-```bash
-git clone https://github.com/dangnha/data-pipeline.git
-cd data-pipeline
-```
+## Active Scripts
 
----
+- scripts/simple_ingest.py
+- scripts/simple_validate.py
+- scripts/simple_preprocess.py
+- scripts/simple_build_features.py
 
-## 2. Environment Setup
+## How It Is Used
 
-### Option A: Conda (Recommended)
+These scripts are called by Airflow DAG churn_batch_pipeline from:
+- infra/docker/student/dags/churn_batch_pipeline.py
 
-```bash
-conda create -n churn_mlops python=3.10 -y
-conda activate churn_mlops
-```
+## Notes
 
-### Option B: Virtual Environment (venv)
-
-```bash
-python -m venv venv
-source venv/bin/activate        # Linux / macOS
-venv\Scripts\activate           # Windows
-```
-
----
-
-## 3. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-## 4. Data Versioning with DVC
-
-Pull tracked data artifacts:
-
-```bash
-dvc pull
-```
-
----
-
-## 5. Feast Feature Store Setup
-
-### 5.1 Apply Feast Repository
-
-```bash
-cd churn_feature_store/churn_features/feature_repo
-feast apply
-```
-
----
-
-### 5.2 Start Redis (Online Store)
-
-Run Redis using Docker:
-
-```bash
-docker run -d -p 6379:6379 --name redis-feast redis:7
-```
-
-Verify Redis is running:
-
-```bash
-docker ps
-```
-
----
-
-### 5.3 Materialize Features to Online Store
-
-Run incremental materialization using the current timestamp:
-
-```bash
-for /f "delims=" %i in ('powershell -Command "Get-Date -Format yyyy-MM-ddTHH:mm:ss"') do feast materialize-incremental %i
-```
-
----
-
-## 6. Online Feature Retrieval
-
-Return to the project root and run the sample retrieval script:
-
-```bash
-python scripts/sample_retrieval.py
-```
-
-Expected output:
-
-- Feature values retrieved from Redis
-- One row per `customer_id`
-
----
+This cleaned project no longer uses DVC, Feast, Redis, or Spark in the active path.

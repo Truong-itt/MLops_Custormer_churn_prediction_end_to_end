@@ -1,0 +1,66 @@
+{
+  "id": "019cf79b-f314-7b22-b31a-f29aabf9e670",
+  "name": "Churn_Monitoring",
+  "description": null,
+  "dashboard": {
+    "name": "Churn_Monitoring",
+    "panels": [
+      {
+        "type": "evidently:dashboard_panel:DashboardPanelCounter",
+        "id": "019cf79b-f31f-7252-befc-f4531c1b14b8",
+        "title": "Dataset Drift (Last)",
+        "filter": {
+          "metadata_values": {},
+          "tag_values": [],
+          "include_test_suites": false
+        },
+        "size": 2,
+        "agg": "last",
+        "value": {
+          "field_path": "dataset_drift",
+          "metric_id": "DatasetDriftMetric",
+          "metric_fingerprint": null,
+          "metric_args": {},
+          "legend": null
+        },
+        "text": null
+      },
+      {
+        "type": "evidently:dashboard_panel:DashboardPanelCounter",
+        "id": "019cf79b-f320-7a37-bb52-107c969c198b",
+        "title": "Drifted Columns Share (Last)",
+        "filter": {
+          "metadata_values": {},
+          "tag_values": [],
+          "include_test_suites": false
+        },
+        "size": 2,
+        "agg": "last",
+        "value": {
+          "field_path": "share_of_drifted_columns",
+          "metric_id": "DatasetDriftMetric",
+          "metric_fingerprint": null,
+          "metric_args": {},
+          "legend": null
+        },
+        "text": null
+      }
+    ],
+    "tabs": [
+      {
+        "id": "019cf79b-f31e-76b3-81f2-b767bbecb9ac",
+        "title": "Overview"
+      }
+    ],
+    "tab_id_to_panel_ids": {
+      "019cf79b-f31e-76b3-81f2-b767bbecb9ac": [
+        "019cf79b-f31f-7252-befc-f4531c1b14b8",
+        "019cf79b-f320-7a37-bb52-107c969c198b"
+      ]
+    }
+  },
+  "team_id": null,
+  "date_from": null,
+  "date_to": null,
+  "created_at": "2026-03-16T17:05:18.612484"
+}

@@ -161,6 +161,20 @@ with DAG(
         python_callable=deploy_model,
     )
 
+    monitor_drift = BashOperator(
+        task_id="monitor_drift",
+        bash_command=(
+            "python /opt/project/model_pipeline/src/scripts/simple_monitoring.py "
+            "--reference-data /opt/project/data-pipeline/data/processed/churn_features.csv "
+            "--inference-log /opt/project/serving_pipeline/simple_api/logs/inference_log.jsonl "
+            "--output-html /opt/project/serving_pipeline/simple_api/reports/drift_report.html "
+            "--output-json /opt/project/serving_pipeline/simple_api/reports/drift_summary.json "
+            "--ui-workspace /opt/project/serving_pipeline/simple_api/evidently_workspace "
+            "--ui-project Churn_Monitoring "
+            "--min-samples 2"
+        ),
+    )
+
     notify_status_task = PythonOperator(
         task_id="notify_status",
         python_callable=notify_status,
@@ -176,5 +190,6 @@ with DAG(
         >> evaluate_model
         >> register_model
         >> deploy_model_task
+        >> monitor_drift
         >> notify_status_task
     )

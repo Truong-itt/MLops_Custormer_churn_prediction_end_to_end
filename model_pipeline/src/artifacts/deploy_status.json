@@ -1,9 +1,9 @@
 {
   "model_name": "churn_prediction_model",
-  "candidate_version": "1",
+  "candidate_version": "3",
   "candidate_score": 0.8501703992210321,
-  "production_score_before": -1.0,
-  "production_version_before": null,
-  "rolled_out": true,
+  "production_score_before": 0.8501703992210321,
+  "production_version_before": "1",
+  "rolled_out": false,
   "production_version_after": "1"
 }

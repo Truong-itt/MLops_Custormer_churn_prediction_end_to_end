@@ -1,0 +1,23 @@
+{
+  "status": "ok",
+  "dataset_drift": true,
+  "share_of_drifted_columns": 0.9,
+  "reference_rows": 6972,
+  "current_rows": 2,
+  "common_columns": [
+    "Age",
+    "Gender",
+    "Tenure",
+    "Usage_Frequency",
+    "Support_Calls",
+    "Payment_Delay",
+    "Subscription_Type",
+    "Contract_Length",
+    "Total_Spend",
+    "Last_Interaction"
+  ],
+  "report_html": "/opt/project/serving_pipeline/simple_api/reports/drift_report.html",
+  "workspace_dir": "/opt/project/serving_pipeline/simple_api/evidently_workspace",
+  "project_id": "019cf79b-f314-7b22-b31a-f29aabf9e670",
+  "project_name": "Churn_Monitoring"
+}
