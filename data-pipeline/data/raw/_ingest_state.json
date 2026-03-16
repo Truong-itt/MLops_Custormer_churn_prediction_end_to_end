@@ -1,0 +1,5 @@
+{
+  "source": "/opt/project/data-pipeline/data/Newdata/Telco_customer_churn.xlsx",
+  "destination": "/opt/project/data-pipeline/data/raw/telco_customer_churn.xlsx",
+  "md5": "8534d3efea2a52104cba8605fef6a7df"
+}
