@@ -11,13 +11,6 @@ Active stack in this repo:
 - FastAPI (serving)
 - Evidently UI (monitoring dashboard)
 
-Removed from active scope:
-- Kubernetes
-- Kafka
-- MinIO
-- Spark
-- Feast
-
 ## Data Source
 
 Main input file:
