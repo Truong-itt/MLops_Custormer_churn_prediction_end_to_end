@@ -1,4 +1,4 @@
-# Customer Churn Prediction (Simplified MLOps)
+# Customer Churn Prediction
 
 This repository is a student-friendly MLOps project for customer churn prediction.
 
