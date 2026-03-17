@@ -1,38 +1,43 @@
-# Docker Infrastructure (Simplified)
+# Docker Infrastructure
 
-This directory now uses a single active stack for the student project:
+This directory contains Docker-based infrastructure options.
 
-- student/
+## Student Stack (Recommended)
 
-Legacy folders from previous architectures were removed from the active workflow.
+Use:
+- `infra/docker/student/docker-compose.yml`
 
-## Active Stack
+This stack runs locally with:
+- Airflow
+- MLflow
+- PostgreSQL
+- FastAPI
+- Gradio
+- Evidently UI
+- MinIO
 
-Use only:
-- infra/docker/student/docker-compose.yml
-
-## Quick Start
+### Quick Start
 
 ```bash
 cd infra/docker/student
-docker compose up --build -d
+docker compose up -d --build
 ```
 
-## Active Services and Ports
+### URLs
 
-- Airflow Web UI: http://localhost:8080
-- MLflow UI: http://localhost:5000
-- FastAPI API and dashboard: http://localhost:8000
+- Airflow: http://localhost:8080
+- MLflow: http://localhost:5000
+- FastAPI docs: http://localhost:8000/docs
+- FastAPI dashboard: http://localhost:8000
+- Gradio: http://localhost:7860
 - Evidently UI: http://localhost:8001
+- MinIO Console: http://localhost:9001
 
-## Stop
+### Behavior Notes
 
-```bash
-cd infra/docker/student
-docker compose down
-```
-
-## Notes
-
-This simplified project intentionally does not use Kubernetes, Kafka, Spark, or MinIO.
+- MLflow artifacts are stored in MinIO bucket `mlflow`.
+- DAG task `check_new_data` controls whether training flow continues.
+- Structured run/task logs are written to:
+	- `infra/docker/student/logs/task_events.jsonl`
+	- `infra/docker/student/logs/run_summaries/*.json`
 See infra/docker/student/README.md for full run workflow and troubleshooting.

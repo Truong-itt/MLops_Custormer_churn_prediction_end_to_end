@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-03-17T09:44:42.708488+00:00",
+  "dag_id": "churn_batch_pipeline",
+  "run_id": "manual__2026-03-17T09:44:00+00:00",
+  "overall_state": "success",
+  "skip_reason": "First run or missing ingest state",
+  "counts": {
+    "total_tasks": 11,
+    "success": 11,
+    "failed": 0,
+    "upstream_failed": 0,
+    "skipped": 0
+  },
+  "tasks": [
+    {
+      "task_id": "build_features",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:09.939847+00:00",
+      "end_date": "2026-03-17T09:44:11.313729+00:00",
+      "duration_seconds": 1.373882
+    },
+    {
+      "task_id": "check_new_data",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:00.997341+00:00",
+      "end_date": "2026-03-17T09:44:01.408501+00:00",
+      "duration_seconds": 0.41116
+    },
+    {
+      "task_id": "deploy_model",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:34.444530+00:00",
+      "end_date": "2026-03-17T09:44:34.788216+00:00",
+      "duration_seconds": 0.343686
+    },
+    {
+      "task_id": "evaluate_model",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:29.291439+00:00",
+      "end_date": "2026-03-17T09:44:29.875501+00:00",
+      "duration_seconds": 0.584062
+    },
+    {
+      "task_id": "ingest_raw_data",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:02.056634+00:00",
+      "end_date": "2026-03-17T09:44:02.705332+00:00",
+      "duration_seconds": 0.648698
+    },
+    {
+      "task_id": "monitor_drift",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:35.204230+00:00",
+      "end_date": "2026-03-17T09:44:40.771778+00:00",
+      "duration_seconds": 5.567548
+    },
+    {
+      "task_id": "notify_status",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:41.291216+00:00",
+      "end_date": "2026-03-17T09:44:41.669236+00:00",
+      "duration_seconds": 0.37802
+    },
+    {
+      "task_id": "preprocess_data",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:06.039159+00:00",
+      "end_date": "2026-03-17T09:44:08.786461+00:00",
+      "duration_seconds": 2.747302
+    },
+    {
+      "task_id": "register_model",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:31.201709+00:00",
+      "end_date": "2026-03-17T09:44:33.937234+00:00",
+      "duration_seconds": 2.735525
+    },
+    {
+      "task_id": "summarize_run",
+      "state": "success",
+      "try_number": 1,
+      "start_date": "2026-03-17T09:44:42.361628+00:00",
+      "end_date": "2026-03-17T09:44:42.708443+00:00",
+      "duration_seconds": 0.0
+    },
+    {
+      "task_id": "train_model",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:12.098258+00:00",
+      "end_date": "2026-03-17T09:44:28.297942+00:00",
+      "duration_seconds": 16.199684
+    },
+    {
+      "task_id": "validate_data",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T09:44:03.127027+00:00",
+      "end_date": "2026-03-17T09:44:05.782448+00:00",
+      "duration_seconds": 2.655421
+    }
+  ]
+}

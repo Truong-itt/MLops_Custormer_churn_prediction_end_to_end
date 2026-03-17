@@ -8,8 +8,17 @@ Active stack in this repo:
 - Docker Compose
 - Airflow (orchestration)
 - MLflow (tracking + registry)
+- MinIO (artifact storage for MLflow)
 - FastAPI (serving)
+- Gradio (interactive prediction UI)
 - Evidently UI (monitoring dashboard)
+
+## Active Architecture Path
+
+- Data pipeline: data-pipeline/scripts/simple_*.py
+- Training/registry/monitoring: model_pipeline/src/scripts/simple_*.py
+- Serving API: serving_pipeline/simple_api/app.py
+- DAG orchestration: infra/docker/student/dags/churn_batch_pipeline.py
 
 ## Data Source
 
@@ -31,6 +40,11 @@ docker compose up --build -d
 - MLflow: http://localhost:5000
 - FastAPI dashboard: http://localhost:8000
 - FastAPI docs: http://localhost:8000/docs
+- Gradio UI: http://localhost:7860
+- MinIO API: http://localhost:9000
+- MinIO Console: http://localhost:9001
+  - username: minio
+  - password: minio123
 - Evidently UI: http://localhost:8001
 
 ## Main Workflow
@@ -50,6 +64,10 @@ Task sequence:
 10. monitor_drift
 11. notify_status
 
+Notes:
+- If source file is unchanged, DAG intentionally skips downstream tasks after check_new_data.
+- A run summary is still written for each run.
+
 ## Important Outputs
 
 - data-pipeline/data/raw/telco_customer_churn.xlsx
@@ -60,6 +78,8 @@ Task sequence:
 - model_pipeline/src/artifacts/deploy_status.json
 - serving_pipeline/simple_api/reports/drift_summary.json
 - serving_pipeline/simple_api/reports/drift_report.html
+- infra/docker/student/logs/task_events.jsonl
+- infra/docker/student/logs/run_summaries/
 
 ## API Endpoints
 
@@ -67,3 +87,8 @@ Task sequence:
 - POST /predict
 - POST /reload-model
 - GET /monitoring
+
+## Artifact Storage
+
+- MLflow metadata: SQLite in mlflow volume
+- MLflow artifacts/models: MinIO bucket mlflow

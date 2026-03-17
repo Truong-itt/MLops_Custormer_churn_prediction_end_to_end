@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-03-17T08:21:04.771696+00:00",
+  "dag_id": "churn_batch_pipeline",
+  "run_id": "manual__2026-03-17T08:20:54+00:00",
+  "overall_state": "success",
+  "skip_reason": "Source file unchanged; downstream tasks skipped",
+  "counts": {
+    "total_tasks": 11,
+    "success": 1,
+    "failed": 0,
+    "upstream_failed": 0,
+    "skipped": 10
+  },
+  "tasks": [
+    {
+      "task_id": "build_features",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:20:57.228571+00:00",
+      "end_date": "2026-03-17T08:20:57.228571+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "check_new_data",
+      "state": "success",
+      "try_number": 2,
+      "start_date": "2026-03-17T08:20:55.337507+00:00",
+      "end_date": "2026-03-17T08:20:55.779108+00:00",
+      "duration_seconds": 0.441601
+    },
+    {
+      "task_id": "deploy_model",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:21:01.191105+00:00",
+      "end_date": "2026-03-17T08:21:01.191105+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "evaluate_model",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:20:59.133331+00:00",
+      "end_date": "2026-03-17T08:20:59.133331+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "ingest_raw_data",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:20:55.734108+00:00",
+      "end_date": "2026-03-17T08:20:55.734108+00:00",
+      "duration_seconds": null,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "monitor_drift",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:21:02.230845+00:00",
+      "end_date": "2026-03-17T08:21:02.230845+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "notify_status",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:21:03.132192+00:00",
+      "end_date": "2026-03-17T08:21:03.132192+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "preprocess_data",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:20:56.189892+00:00",
+      "end_date": "2026-03-17T08:20:56.189892+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "register_model",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:21:00.168657+00:00",
+      "end_date": "2026-03-17T08:21:00.168657+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "summarize_run",
+      "state": "success",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:21:04.389424+00:00",
+      "end_date": "2026-03-17T08:21:04.771652+00:00",
+      "duration_seconds": 0.0
+    },
+    {
+      "task_id": "train_model",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:20:58.090565+00:00",
+      "end_date": "2026-03-17T08:20:58.090565+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    },
+    {
+      "task_id": "validate_data",
+      "state": "skipped",
+      "try_number": 1,
+      "start_date": "2026-03-17T08:20:55.833587+00:00",
+      "end_date": "2026-03-17T08:20:55.833587+00:00",
+      "duration_seconds": 0.0,
+      "reason": "Source file unchanged; downstream tasks skipped"
+    }
+  ]
+}

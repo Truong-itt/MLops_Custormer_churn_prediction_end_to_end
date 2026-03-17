@@ -1,5 +1,5 @@
 {
-  "run_id": "297a61a6189640dab707ebfd2d7fa32d",
+  "run_id": "488c51c432ad431e91141a12af6cce88",
   "model_name": "logistic_regression",
   "metric_key": "val_roc_auc",
   "metric_value": 0.8501703992210321

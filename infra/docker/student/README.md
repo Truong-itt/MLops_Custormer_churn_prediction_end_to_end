@@ -5,18 +5,19 @@ This is the active runtime stack for the cleaned project.
 ## Architecture
 
 Services:
+- minio
 - postgres
 - mlflow
 - airflow-webserver
 - airflow-scheduler
 - fastapi
+- gradio
 - evidently-ui
 
 This architecture is intentionally simple:
 - No Kubernetes
 - No Kafka
 - No Spark
-- No MinIO
 
 ## Start the Stack
 
@@ -40,6 +41,11 @@ docker compose down
 - MLflow: http://localhost:5000
 - FastAPI dashboard and API: http://localhost:8000
 - FastAPI docs: http://localhost:8000/docs
+- Gradio prediction UI: http://localhost:7860
+- MinIO API: http://localhost:9000
+- MinIO Console: http://localhost:9001
+  - username: minio
+  - password: minio123
 - Evidently UI: http://localhost:8001
 
 ## End-to-End Flow
@@ -50,6 +56,9 @@ docker compose down
 3. DAG runs ingest, validate, preprocess, feature build, train, evaluate, register, deploy, and monitor steps.
 4. FastAPI reloads the production model automatically in deploy step.
 5. Drift report is generated and published to Evidently UI.
+6. MLflow artifacts are stored in MinIO bucket `mlflow`.
+
+If source data is unchanged, the DAG only runs `check_new_data` and marks remaining heavy tasks as skipped.
 
 ## Key Outputs
 
@@ -62,6 +71,8 @@ docker compose down
 - serving_pipeline/simple_api/logs/inference_log.jsonl
 - serving_pipeline/simple_api/reports/drift_report.html
 - serving_pipeline/simple_api/reports/drift_summary.json
+- infra/docker/student/logs/task_events.jsonl
+- infra/docker/student/logs/run_summaries/*.json
 
 ## Monitoring Surfaces
 
@@ -84,6 +95,14 @@ docker compose logs -f airflow-scheduler
 # Tail FastAPI logs
 cd infra/docker/student
 docker compose logs -f fastapi
+
+# Tail Gradio logs
+cd infra/docker/student
+docker compose logs -f gradio
+
+# Tail MinIO logs
+cd infra/docker/student
+docker compose logs -f minio
 
 # Tail Evidently UI logs
 cd infra/docker/student

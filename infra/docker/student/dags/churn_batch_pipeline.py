@@ -9,6 +9,9 @@ import requests
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator, ShortCircuitOperator
+from airflow.utils.trigger_rule import TriggerRule
+
+from logger import log_task_event, on_task_failure, on_task_skipped, on_task_success, write_run_summary
 
 
 PROJECT_ROOT = Path("/opt/project")
@@ -35,9 +38,17 @@ def _md5(file_path: Path) -> str:
 
 
 def check_new_data(**context) -> bool:
+    ti = context["ti"]
     dag_run = context.get("dag_run")
     if dag_run and dag_run.conf and dag_run.conf.get("force_run", False):
         print("force_run=true detected. Execute full pipeline.")
+        ti.xcom_push(key="skip_reason", value="force_run=true")
+        log_task_event(
+            event_type="data_check_decision",
+            context=context,
+            message="force_run=true so downstream tasks will execute",
+            extra={"run_pipeline": True},
+        )
         return True
 
     if not SOURCE_XLSX.exists():
@@ -45,11 +56,35 @@ def check_new_data(**context) -> bool:
 
     current = _md5(SOURCE_XLSX)
     if not INGEST_STATE.exists():
+        ti.xcom_push(key="skip_reason", value="First run or missing ingest state")
+        log_task_event(
+            event_type="data_check_decision",
+            context=context,
+            message="Ingest state not found so downstream tasks will execute",
+            extra={"run_pipeline": True},
+        )
         return True
 
     state = json.loads(INGEST_STATE.read_text(encoding="utf-8"))
     previous = state.get("md5")
-    return current != previous
+    has_new_data = current != previous
+    if has_new_data:
+        ti.xcom_push(key="skip_reason", value="Source file changed")
+        log_task_event(
+            event_type="data_check_decision",
+            context=context,
+            message="Source file changed so downstream tasks will execute",
+            extra={"run_pipeline": True},
+        )
+    else:
+        ti.xcom_push(key="skip_reason", value="Source file unchanged; downstream tasks skipped")
+        log_task_event(
+            event_type="data_check_decision",
+            context=context,
+            message="Source file unchanged so downstream tasks are skipped",
+            extra={"run_pipeline": False},
+        )
+    return has_new_data
 
 
 def deploy_model() -> None:
@@ -80,10 +115,16 @@ with DAG(
     schedule="0 */6 * * *",
     catchup=False,
     tags=["churn", "student", "batch"],
+    default_args={
+        "on_success_callback": on_task_success,
+        "on_failure_callback": on_task_failure,
+        "on_skipped_callback": on_task_skipped,
+    },
 ) as dag:
     check_new_data_task = ShortCircuitOperator(
         task_id="check_new_data",
         python_callable=check_new_data,
+        ignore_downstream_trigger_rules=False,
     )
 
     ingest_raw_data = BashOperator(
@@ -180,6 +221,12 @@ with DAG(
         python_callable=notify_status,
     )
 
+    summarize_run = PythonOperator(
+        task_id="summarize_run",
+        python_callable=write_run_summary,
+        trigger_rule=TriggerRule.ALL_DONE,
+    )
+
     (
         check_new_data_task
         >> ingest_raw_data
@@ -193,3 +240,5 @@ with DAG(
         >> monitor_drift
         >> notify_status_task
     )
+
+    notify_status_task >> summarize_run

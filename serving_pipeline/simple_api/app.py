@@ -9,6 +9,7 @@ import mlflow.pyfunc
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
+from mlflow.tracking import MlflowClient
 from pydantic import BaseModel, Field
 
 
@@ -47,6 +48,24 @@ app = FastAPI(title="Simple Churn Serving API", version="1.0.0")
 
 def _resolve_model_uri() -> str:
     return f"models:/{MODEL_NAME}@{MODEL_ALIAS}"
+
+
+def _resolve_direct_source_uri() -> str | None:
+    """Resolve production alias source and normalize to a direct S3 URI when possible."""
+    try:
+        client = MlflowClient(tracking_uri=MLFLOW_TRACKING_URI)
+        model_version = client.get_model_version_by_alias(MODEL_NAME, MODEL_ALIAS)
+        source = (model_version.source or "").strip()
+        if not source:
+            return None
+        if source.startswith("s3://"):
+            return source
+        if source.startswith("mlflow-artifacts:/"):
+            suffix = source.removeprefix("mlflow-artifacts:/").lstrip("/")
+            return f"s3://mlflow/{suffix}"
+    except Exception:
+        return None
+    return None
 
 
 def _append_inference_log(payload: dict) -> None:
@@ -98,9 +117,23 @@ def load_model(force: bool = False) -> str:
         if (not force) and (_model is not None) and (_model_uri == target_uri):
             return _model_uri
 
-        _model = mlflow.pyfunc.load_model(target_uri)
-        _model_uri = target_uri
-        return _model_uri
+        try:
+            _model = mlflow.pyfunc.load_model(target_uri)
+            _model_uri = target_uri
+            return _model_uri
+        except Exception as primary_exc:
+            direct_source_uri = _resolve_direct_source_uri()
+            if not direct_source_uri:
+                raise primary_exc
+
+            try:
+                _model = mlflow.pyfunc.load_model(direct_source_uri)
+                _model_uri = target_uri
+                return _model_uri
+            except Exception as fallback_exc:
+                raise RuntimeError(
+                    f"Primary load failed ({primary_exc}); fallback load failed ({fallback_exc})"
+                )
 
 
 @app.on_event("startup")
@@ -187,6 +220,10 @@ def dashboard() -> str:
                 <div class=\"value\">{model_status}</div>
             </div>
             <div class=\"card\">
+                <div class=\"label\">Gradio UI</div>
+                <div class=\"value\"><a href=\"http://localhost:7860\" target=\"_blank\">http://localhost:7860</a></div>
+            </div>
+            <div class=\"card\">
                 <div class=\"label\">Model URI</div>
                 <div class=\"value\">{model_uri}</div>
             </div>
@@ -232,6 +269,7 @@ def dashboard() -> str:
                 <li><code>POST /reload-model</code> : reload production model</li>
                 <li><code>GET /monitoring</code> : Evidently summary JSON</li>
                 <li><code>GET http://localhost:8001</code> : Evidently UI dashboard</li>
+                <li><code>GET http://localhost:7860</code> : Gradio prediction UI</li>
                 <li><code>GET /docs</code> : Swagger UI</li>
             </ul>
         </div>

@@ -1,9 +1,9 @@
 {
   "status": "ok",
   "dataset_drift": true,
-  "share_of_drifted_columns": 0.9,
+  "share_of_drifted_columns": 1.0,
   "reference_rows": 6972,
-  "current_rows": 2,
+  "current_rows": 22,
   "common_columns": [
     "Age",
     "Gender",
